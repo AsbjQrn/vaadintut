@@ -80,9 +80,9 @@ public class Opskrift {
         opskriftPercentageFat = opskriftTotalFat / opskriftMakroNaeringlWeigt * 100;
 
         MealTotals mealTotals = new MealTotals(this.opskriftTotalGramValgt, this.opskriftTotalKcal, this.opskriftTotalProtein, this.opskriftTotalFat, this.opskriftTotalCarbonhydrates, this.opskriftTotalDietaryfibre);
-        mealTotals.setOpskriftPercentageCarbonhydrates(opskriftPercentageCarbonhydrates);
-        mealTotals.setOpskriftPercentageFat(opskriftPercentageFat);
-        mealTotals.setOpskriftPercentageProtein(opskriftPercentageProtein);
+        mealTotals.setOpskriftPercentageCarbonhydrates(Double.isNaN(opskriftPercentageCarbonhydrates) ? 0 : opskriftPercentageCarbonhydrates);
+        mealTotals.setOpskriftPercentageFat(Double.isNaN(opskriftPercentageFat) ? 0 : opskriftPercentageFat);
+        mealTotals.setOpskriftPercentageProtein(Double.isNaN(opskriftPercentageProtein) ? 0 : opskriftPercentageProtein);
         return mealTotals;
 
     }
