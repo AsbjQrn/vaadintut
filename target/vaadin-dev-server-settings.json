@@ -1,0 +1,17 @@
+{
+  "frontendFolder": "/home/asbjoe/develop/vaadintut/./src/main/frontend",
+  "themeFolder": "themes",
+  "themeResourceFolder": "/home/asbjoe/develop/vaadintut/./src/main/frontend/generated/jar-resources",
+  "staticOutput": "/home/asbjoe/develop/vaadintut/target/classes/META-INF/VAADIN/webapp/VAADIN/static",
+  "generatedFolder": "generated",
+  "statsOutput": "/home/asbjoe/develop/vaadintut/target/classes/META-INF/VAADIN/config",
+  "frontendBundleOutput": "/home/asbjoe/develop/vaadintut/target/classes/META-INF/VAADIN/webapp",
+  "devBundleOutput": "/home/asbjoe/develop/vaadintut/target/dev-bundle/webapp",
+  "devBundleStatsOutput": "/home/asbjoe/develop/vaadintut/target/dev-bundle/config",
+  "jarResourcesFolder": "/home/asbjoe/develop/vaadintut/./src/main/frontend/generated/jar-resources",
+  "themeName": "",
+  "clientServiceWorkerSource": "/home/asbjoe/develop/vaadintut/target/sw.ts",
+  "pwaEnabled": false,
+  "offlineEnabled": false,
+  "offlinePath": "'offline.html'"
+}

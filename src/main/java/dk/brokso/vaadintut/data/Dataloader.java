@@ -1,0 +1,164 @@
+package dk.brokso.vaadintut.data;
+
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Component;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+@Component
+public class Dataloader implements dk.brokso.vaadintut.utils.Loggable {
+
+
+    @Bean
+    public List<FoodItem> getFood() {
+
+        logger().info("Starter dataload");
+
+        List<FoodItem> foods = new ArrayList<>();
+
+        readCsv(foods);
+        readAdditional(foods);
+
+        logger().info("Antal madvarer loaded: " + foods.size());
+        logger().info("Afslutter dataload");
+        return foods;
+    }
+
+    private static void readCsv(List<FoodItem> foods) {
+        try (InputStream inputStream = new ClassPathResource("madvarer.csv").getInputStream();
+             BufferedReader fileReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+
+            String line = "";
+            line = fileReader.readLine();
+            int i = 0;
+            do {
+                List<String> dataLine = splitLinie(line);
+                if (!hasSkipCondition(dataLine)) {
+                    foods.add(FoodItem.of(dataLine));
+                }
+                i++;
+                line = fileReader.readLine();
+            } while ((line != null));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void readAdditional(List<FoodItem> foods) {
+        try (InputStream inputStream = new ClassPathResource("meremad.csv").getInputStream();
+             BufferedReader fileReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+
+            String line = "";
+            line = fileReader.readLine();
+            int i = 0;
+            do {
+                List<String> dataLine = splitLinie(line);
+                if (!hasSkipCondition(dataLine)) {
+                    foods.add(FoodItem.ofAdditional(dataLine));
+                }
+                i++;
+                line = fileReader.readLine();
+            } while ((line != null));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static boolean hasSkipCondition(List<String> dataLine) {
+
+        if (dataLine.get(0).trim().equals(""))
+            return true;
+
+        if (dataLine.get(1).trim().contains("FoodName"))
+            return true;
+
+        return false;
+    }
+
+    public List<FoodItem> load() {
+
+        logger().info("Starter dataload");
+
+        List<FoodItem> foods = new ArrayList<>();
+
+        var fil = new File("");
+        System.out.println("****************************************************************************" + fil.getAbsolutePath());
+
+
+        try (BufferedReader fileReader = new BufferedReader(new FileReader("madvarer.csv"))) {
+
+            String line = "";
+            line = fileReader.readLine();
+            int i = 0;
+            do {
+                List<String> dataLine = splitLinie(line);
+                if (dataLine.get(5).equals("kcal/100 g")) continue;
+                foods.add(FoodItem.of(dataLine));
+                i++;
+                line = fileReader.readLine();
+            } while ((line != null));
+
+
+        } catch (
+                IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return foods;
+
+    }
+
+    private static List<String> splitLinie(String line) {
+        List<String> entries = new ArrayList<>();
+        boolean inQuotes = false;
+        StringBuilder currentEntry = new StringBuilder();
+
+        for (char ch : line.toCharArray()) {
+            if (ch == '\"') {
+                inQuotes = !inQuotes;
+            } else if (ch == ',' && !inQuotes) {
+
+                String current = currentEntry.toString().trim();
+
+                if (isNumberWihComma(current.toCharArray())) {
+                    current = current.replace(',', '.');
+                }
+
+                entries.add(current);
+                currentEntry.setLength(0); // Reset the builder
+            } else {
+                currentEntry.append(ch);
+            }
+        }
+
+        // Add the last entry
+        entries.add(currentEntry.toString().trim());
+
+        return entries;
+    }
+
+    private static boolean isNumberWihComma(char[] chars) {
+
+        int commas = 0;
+        int numbers = 0;
+        Set<Integer> ints = new HashSet<>();
+        for (char ch : chars) {
+            if (ch == ',') commas++;
+            if (ch == '0' || ch == '1' || ch == '2' || ch == '3' || ch == '4' || ch == '5' || ch == '6' || ch == '7' || ch == '8' || ch == '9')
+                numbers++;
+        }
+
+        return chars.length == commas + numbers;
+
+
+    }
+
+
+}
