@@ -81,7 +81,9 @@ public class MainView extends VerticalLayout {
                     .set("background-color", "transparent")
                     .set("border", "none")
                     .set("box-shadow", "none")
-                    .set("color", "blue") // Optional: make the icon red
+                    .set("color", "#ffbd66") // Optional: make the icon red
+//                    .set("color", "#ff9e99") // Optional: make the icon red
+//                    .set("color", "#90bdf9") // Optional: make the icon red
                     .set("cursor", "pointer");
             deleteButton.addClickListener(event -> deleteRow(food));
             return deleteButton;
@@ -110,7 +112,7 @@ public class MainView extends VerticalLayout {
         gramKolonne.setEditorComponent(gramField);
 
 
-        chosenFoodGrid.addItemDoubleClickListener(e -> {
+        chosenFoodGrid.addItemClickListener(e -> {
             editor.editItem(e.getItem());
             Component editorComponent = e.getColumn().getEditorComponent();
             if (editorComponent instanceof Focusable<?>) {
@@ -179,11 +181,11 @@ public class MainView extends VerticalLayout {
     private void updateBadge(Span badge, String text, String theme) {
 
 
-        badge.setText(text);
-        badge.getElement().getThemeList().clear(); // Clear existing themes
-        badge.getElement().getThemeList().add("badge");
-        badge.getElement().getThemeList().add(theme); // Add additional theme variant like "success", "error", etc.
-        badge.setVisible(true);
+//        badge.setText(text);
+//        badge.getElement().getThemeList().clear(); // Clear existing themes
+//        badge.getElement().getThemeList().add("badge");
+//        badge.getElement().getThemeList().add(theme); // Add additional theme variant like "success", "error", etc.
+//        badge.setVisible(true);
 
 
 
@@ -271,9 +273,14 @@ public class MainView extends VerticalLayout {
 
 // Add new colored values
             bagdes.add(
-                    createColoredValue("Protein", mealTotals.getOpskriftPercentageProtein(), "#0066CC"),
-                    createColoredValue("Kulhydrat", mealTotals.getOpskriftPercentageCarbonhydrates(), "#33CC33"),
-                    createColoredValue("Fedt", mealTotals.getOpskriftPercentageFat(), "#CC3300")
+                    createColoredValue("Protein", mealTotals.getOpskriftPercentageProtein(), "#90bdf9"),
+//                    createColoredValue("Protein", mealTotals.getOpskriftPercentageProtein(), "#0066CC"),
+                    createColoredValue("Kulhydrat", mealTotals.getOpskriftPercentageCarbonhydrates(), "#8aff66"),
+//                    createColoredValue("Kulhydrat", mealTotals.getOpskriftPercentageCarbonhydrates(), "#33CC33"),
+//                    createColoredValue("Fedt", mealTotals.getOpskriftPercentageFat(), "#eb9934")
+                    createColoredValue("Fedt", mealTotals.getOpskriftPercentageFat(), "#ffbd66")
+//                    createColoredValue("Fedt", mealTotals.getOpskriftPercentageFat(), "#ff9e99")
+//                    createColoredValue("Fedt", mealTotals.getOpskriftPercentageFat(), "#eb7734")
             );
 
         }
