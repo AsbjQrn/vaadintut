@@ -17,10 +17,10 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.Lumo;
 import dk.brokso.vaadintut.data.*;
+import dk.brokso.vaadintut.utils.Calculator;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 
 @Route("")
@@ -43,10 +43,10 @@ public class MainView extends VerticalLayout {
     private final static String KOLONNE_KULHYDRAT = "Kulhydrat";
     private final static String KOLONNE_FEDT = "Fedt";
     private final static String KOLONNE_FIBRE = "Fibre";
+    private final static String KOLONNE_MAETHED = "Mæthed";
 
 
     MainView(Dataloader dataloader) {
-
 
 
         UI.getCurrent().getElement().getThemeList().add(Lumo.DARK);
@@ -73,17 +73,15 @@ public class MainView extends VerticalLayout {
         Grid.Column<Food> kulhydrat = chosenFoodGrid.addColumn(Food::getGramCarbonhydrates).setHeader(KOLONNE_KULHYDRAT).setAutoWidth(true);
         Grid.Column<Food> fedt = chosenFoodGrid.addColumn(Food::getGramFat).setHeader(KOLONNE_FEDT).setAutoWidth(true);
         Grid.Column<Food> fibre = chosenFoodGrid.addColumn(Food::getGramDietaryfibre).setHeader(KOLONNE_FIBRE).setAutoWidth(true);
+        Grid.Column<Food> maethed = chosenFoodGrid.addColumn(Food::getMaethed).setHeader(KOLONNE_MAETHED).setAutoWidth(true);
 
-//        Grid.Column<Food> maethed = chosenFoodGrid.addColumn(0.0).setHeader("Mæthedsindex").setAutoWidth(true);
         chosenFoodGrid.addComponentColumn(food -> {
             Button deleteButton = new Button(VaadinIcon.TRASH.create());
             deleteButton.getStyle()
                     .set("background-color", "transparent")
                     .set("border", "none")
                     .set("box-shadow", "none")
-                    .set("color", "#ffbd66") // Optional: make the icon red
-//                    .set("color", "#ff9e99") // Optional: make the icon red
-//                    .set("color", "#90bdf9") // Optional: make the icon red
+                    .set("color", "#ffbd66")
                     .set("cursor", "pointer");
             deleteButton.addClickListener(event -> deleteRow(food));
             return deleteButton;
@@ -99,13 +97,8 @@ public class MainView extends VerticalLayout {
         NumberField gramField = new NumberField();
         gramField.addBlurListener(blur -> refresh());
         gramField.setWidthFull();
-//        gramField.getStyle().set("color", "red");
-//        gramField.getStyle().set("font-weight", "bold");
-//        gramField.getStyle().set("border", "1px solid #ccc");
 
 
-
-//        addCloseHandler(firstNameField, editor);
         binder.forField(gramField)
                 .asRequired("Gram name must not be empty or 0")
                 .bind(Food::getGram, Food::setGram);
@@ -181,33 +174,6 @@ public class MainView extends VerticalLayout {
     private void updateBadge(Span badge, String text, String theme) {
 
 
-//        badge.setText(text);
-//        badge.getElement().getThemeList().clear(); // Clear existing themes
-//        badge.getElement().getThemeList().add("badge");
-//        badge.getElement().getThemeList().add(theme); // Add additional theme variant like "success", "error", etc.
-//        badge.setVisible(true);
-
-
-
-//        badge.setText(text);
-//        // Clear any existing theme classes
-//        badge.getElement().getThemeList().clear();
-//
-//        // Apply direct styling
-//        badge.getStyle()
-//                .set("background-color", "blue")
-//                .set("color", "white")
-//                .set("border-radius", "4px")
-//                .set("padding", "4px 8px")
-//                .set("font-size", "14px")
-//                .set("font-weight", "500")
-//                .set("margin-right", "8px")
-//                .set("display", "inline-block");
-//
-//        badge.setVisible(true);
-
-
-
     }
 
 
@@ -263,28 +229,21 @@ public class MainView extends VerticalLayout {
                 case KOLONNE_GRAM:
                     column.setFooter(String.format("%.2f", mealTotals.getGramIalt()));
                     break;
+                case KOLONNE_MAETHED:
+                    column.setFooter(String.format("%.2f", mealTotals.getMaethed()));
+                    break;
                 default:
                     column.setFooter(""); // Default action for unhandled columns
                     break;
             }
 
-            // Clear previous indicators
             bagdes.removeAll();
-
-// Add new colored values
             bagdes.add(
                     createColoredValue("Protein", mealTotals.getOpskriftPercentageProtein(), "#90bdf9"),
-//                    createColoredValue("Protein", mealTotals.getOpskriftPercentageProtein(), "#0066CC"),
                     createColoredValue("Kulhydrat", mealTotals.getOpskriftPercentageCarbonhydrates(), "#8aff66"),
-//                    createColoredValue("Kulhydrat", mealTotals.getOpskriftPercentageCarbonhydrates(), "#33CC33"),
-//                    createColoredValue("Fedt", mealTotals.getOpskriftPercentageFat(), "#eb9934")
                     createColoredValue("Fedt", mealTotals.getOpskriftPercentageFat(), "#ffbd66")
-//                    createColoredValue("Fedt", mealTotals.getOpskriftPercentageFat(), "#ff9e99")
-//                    createColoredValue("Fedt", mealTotals.getOpskriftPercentageFat(), "#eb7734")
             );
-
         }
-
 
         updateBadge(proteinBadge, String.format("Protein %.2f procent", mealTotals.getOpskriftPercentageProtein()), "badge");
         updateBadge(kulhydratBadge, String.format("Kulhydrat %.2f procent", mealTotals.getOpskriftPercentageCarbonhydrates()), "badge");

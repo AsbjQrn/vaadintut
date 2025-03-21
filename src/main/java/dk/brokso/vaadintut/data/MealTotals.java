@@ -27,6 +27,7 @@ public class MealTotals implements Food {
     private double opskriftPercentageCarbonhydrates;
     private double opskriftPercentageProtein;
     private double opskriftPercentageFat;
+    private double maethed;
 
     public MealTotals() {
     }
@@ -74,6 +75,15 @@ public class MealTotals implements Food {
     @Override
     public void setGram(double gram) {
         this.gramIalt = gram;
+    }
+
+    @Override
+    public double getMaethed() {
+        return this.maethed;
+    }
+
+    public void setMaethed(double opskriftKiloKalorierpr100Gr, double opskriftProteinPr100Gr, double opskriftDietaryfibrePr100Gr, double opskriftFatPr100Gr) {
+        this.maethed = this.calculateFullnessFactor(opskriftKiloKalorierpr100Gr, opskriftProteinPr100Gr, opskriftDietaryfibrePr100Gr, opskriftFatPr100Gr);
     }
 
     public double getTotalCalories() {

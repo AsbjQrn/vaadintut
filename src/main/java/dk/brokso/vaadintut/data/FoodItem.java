@@ -117,6 +117,10 @@ public class FoodItem implements Food {
         return dietaryfibreIn100gram * gram  * 1/100;
     }
 
+    public double getMaethed(){
+        return this.calculateFullnessFactor(kcalIn100Gram, proteinIn100Gram, dietaryfibreIn100gram, fatIn100Gram);
+    }
+
     @Override
     public void setGram(double gram) {
         this.gram = gram;
