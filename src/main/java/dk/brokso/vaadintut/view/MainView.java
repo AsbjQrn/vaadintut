@@ -9,12 +9,15 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.editor.Editor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.shared.Tooltip;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.Lumo;
 import dk.brokso.vaadintut.data.*;
 //import dk.brokso.vaadintut.utils.Calculator;
@@ -49,6 +52,8 @@ public class MainView extends VerticalLayout {
 
 
         UI.getCurrent().getElement().getThemeList().add(Lumo.DARK);
+
+
 
         List<FoodItem> foodListToChooseFrom = dataloader.getFood();
 
@@ -115,16 +120,46 @@ public class MainView extends VerticalLayout {
         kulhydratBadge = initializeBadge();
         fedtBadge = initializeBadge();
         bagdes = new HorizontalLayout(proteinBadge, kulhydratBadge, fedtBadge);
-        VerticalLayout bottomOfPage = new VerticalLayout();
-        bottomOfPage.add(chosenFoodGrid);
-        bottomOfPage.add(bagdes);
-        add(bottomOfPage);
+        VerticalLayout badgeContainer = new VerticalLayout();
+        badgeContainer.add(chosenFoodGrid);
+        badgeContainer.add(bagdes);
+        add(badgeContainer);
+
+
+
+
+
+
+        Button Slanketips = new Button("Slanketips", event ->
+                getUI().ifPresent(ui -> ui.navigate("tips"))
+        );
+        VerticalLayout linksContainer = new VerticalLayout();
+        linksContainer.add(Slanketips);
+
+        add(linksContainer);
+
+
+
     }
 
     private Component createHeaderWithTooltip(String headerText, String tooltipText) {
-        Span header = new Span(headerText);
-        header.getElement().setProperty("title", tooltipText); // This sets the tooltip
-        return header;
+        Span headerLabel = new Span(headerText);
+
+        Icon infoIcon = VaadinIcon.INFO_CIRCLE.create();
+        infoIcon.getStyle()
+                .set("cursor", "pointer")
+                .set("color", "#ffbd66");
+
+        infoIcon.getStyle().set("cursor", "pointer");
+
+        // Vaadin's built-in tooltip component
+        Tooltip tooltip = Tooltip.forComponent(infoIcon)
+                .withText("Mæthedstallet er et beregnet mål, som udtrykker opnået mæthed/kalorie. Målet holder godt vand i de fleste tilfælde, men skal kombineres med ens egen mæthedsoplevelse.")
+                .withPosition(Tooltip.TooltipPosition.BOTTOM)
+                ;
+
+
+        return new HorizontalLayout(headerLabel, infoIcon);
     }
 
     private Span initializeBadge() {
