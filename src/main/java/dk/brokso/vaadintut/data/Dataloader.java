@@ -127,7 +127,7 @@ public class Dataloader implements dk.brokso.vaadintut.utils.Loggable {
 
                 String current = currentEntry.toString().trim();
 
-                if (isNumberWihComma(current.toCharArray())) {
+                if (isNumberWithComma(current.toCharArray())) {
                     current = current.replace(',', '.');
                 }
 
@@ -144,7 +144,7 @@ public class Dataloader implements dk.brokso.vaadintut.utils.Loggable {
         return entries;
     }
 
-    private static boolean isNumberWihComma(char[] chars) {
+    private static boolean isNumberWithComma(char[] chars) {
 
         int commas = 0;
         int numbers = 0;

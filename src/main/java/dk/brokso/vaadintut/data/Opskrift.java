@@ -83,6 +83,9 @@ public class Opskrift {
         mealTotals.setOpskriftPercentageCarbonhydrates(Double.isNaN(opskriftPercentageCarbonhydrates) ? 0 : opskriftPercentageCarbonhydrates);
         mealTotals.setOpskriftPercentageFat(Double.isNaN(opskriftPercentageFat) ? 0 : opskriftPercentageFat);
         mealTotals.setOpskriftPercentageProtein(Double.isNaN(opskriftPercentageProtein) ? 0 : opskriftPercentageProtein);
+
+        double maethed = mealTotals.calculateFullnessFactor(opskriftKiloKalorierpr100Gr, opskriftProteinPr100Gr, opskriftDietaryfibrePr100Gr, opskriftFatPr100Gr);
+        mealTotals.setMaethed(Double.isNaN(maethed) ? 0 : maethed);
         return mealTotals;
 
     }

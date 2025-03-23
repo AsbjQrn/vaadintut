@@ -17,7 +17,7 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.Lumo;
 import dk.brokso.vaadintut.data.*;
-import dk.brokso.vaadintut.utils.Calculator;
+//import dk.brokso.vaadintut.utils.Calculator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,15 +27,14 @@ import java.util.List;
 public class MainView extends VerticalLayout {
 
     private final ComboBox<FoodItem> foodChoiceComboBox;
-    private final List<FoodItem> foodList;
-    private final List<Food> chosenfoodList = new ArrayList<>();
-    private final Opskrift opskrift = new Opskrift(chosenfoodList);
     private final Grid<Food> chosenFoodGrid;
     private final HorizontalLayout bagdes;
     private Span proteinBadge;
     private Span kulhydratBadge;
     private Span fedtBadge;
 
+    private final List<Food> chosenfoodList = new ArrayList<>();
+    private final Opskrift opskrift = new Opskrift(chosenfoodList);
     private final static String KOLONNE_NAVN = "Navn";
     private final static String KOLONNE_GRAM = "Gram";
     private final static String KOLONNE_KALORIER = "Kalorier";
@@ -51,13 +50,13 @@ public class MainView extends VerticalLayout {
 
         UI.getCurrent().getElement().getThemeList().add(Lumo.DARK);
 
-        this.foodList = dataloader.getFood();
+        List<FoodItem> foodListToChooseFrom = dataloader.getFood();
 
 //      Food choice
         VerticalLayout topOfPage = new VerticalLayout();
         topOfPage.setWidthFull();
         foodChoiceComboBox = new ComboBox<>("Vælg Mad");
-        foodChoiceComboBox.setItems(foodList);
+        foodChoiceComboBox.setItems(foodListToChooseFrom);
         foodChoiceComboBox.setItemLabelGenerator(FoodItem::getName);
         foodChoiceComboBox.setWidthFull();
         foodChoiceComboBox.addValueChangeListener(changeInValue -> receiveChosenValue(changeInValue.getValue()));
@@ -73,7 +72,8 @@ public class MainView extends VerticalLayout {
         Grid.Column<Food> kulhydrat = chosenFoodGrid.addColumn(Food::getGramCarbonhydrates).setHeader(KOLONNE_KULHYDRAT).setAutoWidth(true);
         Grid.Column<Food> fedt = chosenFoodGrid.addColumn(Food::getGramFat).setHeader(KOLONNE_FEDT).setAutoWidth(true);
         Grid.Column<Food> fibre = chosenFoodGrid.addColumn(Food::getGramDietaryfibre).setHeader(KOLONNE_FIBRE).setAutoWidth(true);
-        Grid.Column<Food> maethed = chosenFoodGrid.addColumn(Food::getMaethed).setHeader(KOLONNE_MAETHED).setAutoWidth(true);
+        Grid.Column<Food> maethed = chosenFoodGrid.addColumn(Food::getMaethed).setHeader(createHeaderWithTooltip(KOLONNE_MAETHED, "Hvor mæt du bliver")).setAutoWidth(true);
+
 
         chosenFoodGrid.addComponentColumn(food -> {
             Button deleteButton = new Button(VaadinIcon.TRASH.create());
@@ -89,7 +89,6 @@ public class MainView extends VerticalLayout {
 
         chosenFoodGrid.setItems(chosenfoodList);
 
-
         Binder<Food> binder = new Binder<>(Food.class);
         Editor<Food> editor = chosenFoodGrid.getEditor();
         editor.setBinder(binder);
@@ -104,7 +103,6 @@ public class MainView extends VerticalLayout {
                 .bind(Food::getGram, Food::setGram);
         gramKolonne.setEditorComponent(gramField);
 
-
         chosenFoodGrid.addItemClickListener(e -> {
             editor.editItem(e.getItem());
             Component editorComponent = e.getColumn().getEditorComponent();
@@ -113,19 +111,20 @@ public class MainView extends VerticalLayout {
             }
         });
 
-
-        VerticalLayout bottomOfPage = new VerticalLayout();
-        bottomOfPage.add(chosenFoodGrid);
         proteinBadge = initializeBadge();
         kulhydratBadge = initializeBadge();
         fedtBadge = initializeBadge();
-
-
         bagdes = new HorizontalLayout(proteinBadge, kulhydratBadge, fedtBadge);
+        VerticalLayout bottomOfPage = new VerticalLayout();
+        bottomOfPage.add(chosenFoodGrid);
         bottomOfPage.add(bagdes);
         add(bottomOfPage);
+    }
 
-
+    private Component createHeaderWithTooltip(String headerText, String tooltipText) {
+        Span header = new Span(headerText);
+        header.getElement().setProperty("title", tooltipText); // This sets the tooltip
+        return header;
     }
 
     private Span initializeBadge() {
@@ -154,28 +153,6 @@ public class MainView extends VerticalLayout {
         container.add(labelSpan, valueSpan);
         return container;
     }
-
-
-    private Component createColorBox(String label, double value, String bgColor) {
-        Div box = new Div();
-        box.getStyle()
-                .set("display", "inline-block")
-                .set("margin-right", "12px")
-                .set("padding", "6px 12px")
-                .set("background-color", bgColor)
-                .set("color", "white")
-                .set("border-radius", "3px")
-                .set("font-weight", "500");
-
-        box.setText(label + ": " + String.format("%.2f%%", value));
-        return box;
-    }
-
-    private void updateBadge(Span badge, String text, String theme) {
-
-
-    }
-
 
     private void deleteRow(Food chosenFoodItem) {
         if (chosenFoodItem == null) {
@@ -233,7 +210,7 @@ public class MainView extends VerticalLayout {
                     column.setFooter(String.format("%.2f", mealTotals.getMaethed()));
                     break;
                 default:
-                    column.setFooter(""); // Default action for unhandled columns
+                    column.setFooter("");
                     break;
             }
 
@@ -245,9 +222,6 @@ public class MainView extends VerticalLayout {
             );
         }
 
-        updateBadge(proteinBadge, String.format("Protein %.2f procent", mealTotals.getOpskriftPercentageProtein()), "badge");
-        updateBadge(kulhydratBadge, String.format("Kulhydrat %.2f procent", mealTotals.getOpskriftPercentageCarbonhydrates()), "badge");
-        updateBadge(fedtBadge, String.format("Fedt %.2f procent", mealTotals.getOpskriftPercentageFat()), "badge");
 
         chosenFoodGrid.getDataProvider().refreshAll();
         foodChoiceComboBox.clear();
