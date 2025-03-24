@@ -34,7 +34,7 @@ public class Tips extends VerticalLayout {
 
         add(new Span("For at gøre det nemt har jeg i lang tid spist meget det samme. Havregryn til morgenmad, banan og proteinbar til mellemmåltid. Rugbrødsmadder til frokost. Forskellige nedfrosne retter til aftensmad"));
         add(new Span("Dette bliver nemt kedeligt - derfor denne app så man nemt selv kan designe sine retter og få lækre variationer som kun er et spørgsmål om opfindsomhed"));
-        add(new Span("Tænker hvis der er bare er nogle få mennesker der bruger appen - så kan man hurtigt samle en masse opskrifter der sparker numse mht mæthed og lækkerhed og samtidig ikke inderholder en masse kalorier."));
+        add(new Span("Tænker hvis der er bare er nogle få mennesker der bruger appen - så kan man hurtigt samle en masse opskrifter der sparker numse mht mæthed og lækkerhed og samtidig ikke indeholder en masse kalorier."));
 
 
         add(new H2("Tips til mæthed, cravings med mere:"));
@@ -56,11 +56,11 @@ public class Tips extends VerticalLayout {
         add(new Span("Bemærk at appen beregner et mæthedstal. Tallet udtrykker \"opnået mæthed pr indtaget kalorie\". Tallet ligger mellem 0 og 5. Jo højere tal, jo mere mæthed. Tallet er som regel retvisende, " +
                 "men det er klogt lige at prøve en ny ret af, inden man kaster sig ud i at preppe til en måneds aftensmad :-)  "));
 
-        add(new Span("Termisk effekt. Denne app er skrevet, så man kan designe retter, der udnytter den såkaldt \"termiske effekt\". " +
-                "Termisk effekt går ud på at kroppen bruger forskellig energi på at forbrænde forskellige fødevarer." +
+        add(new Span("Termisk effekt. Denne app er skrevet, så man kan designe retter, der udnytter den såkaldte \"termiske effekt\". " +
+                "Termisk effekt går ud på at kroppen bruger forskellig mængde energi på at forbrænde forskellige fødevarer." +
                 "Når man spiser fedt bruges 0-3 procent af den indtagne energi til forbrænding. For kulhydrat er det mellem 5 og 10 procent. " +
                 "For protein er det mellem 20 og 30 procent, dvs man opnår en ekstra forbrændings/slankeeffekt ved indtagelse af den samme mængde kalorier, på forskellige fødevarer " +
-                "Dog er det vigtigt ikke at gå for lavt på fedtprocenten. Fedt bruges til mange vigtige ting i kroppen. " +
+                "Dog er det vigtigt ikke at gå for lavt på fedtprocenten. Fedt bruges til mange vigtige ting i kroppen og hjernen. " +
                 "Så vidt vides må man ikke komme under 20 procent. Og et normalt sundt indtag kan ligge mellem 20 og 30 procent. Det er også vigtigt at få forskellige typer fedt. " +
                 "Ifølge nogle kilder kan man få for meget protein, ifølge andre kan man ikke. Tænker at hvis man undgår ekstremer er man \"in the green\" " +
                 "Mit vægttab er sket med en brændstofblanding af fedt/protein/kulhydrat på 20/30/50 procent. Se evt: \n" +
