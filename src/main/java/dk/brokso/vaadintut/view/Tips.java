@@ -1,6 +1,7 @@
 package dk.brokso.vaadintut.view;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
@@ -15,7 +16,21 @@ public class Tips extends VerticalLayout {
 
         UI.getCurrent().getElement().getThemeList().add(Lumo.DARK);
 
-        add(new H1("Mæthed, cravings med mere:"));
+//        add(new H1("Mæthed, cravings med mere:"));
+
+        add(new H2("En lille slankehistorie"));
+
+
+        add(new Span("Nedenstående er et forsøg på at videreformidle de tanker og teknikker jeg har samlet op og brugt til selv at tabe mig. Jeg gik fra ca 111 kilo til ca 96 kilo på 7-8 måneder." +
+                "Jeg er ikke blevet super slim - så skulle jeg tabe mig noget mere. Men er dog gået fra en fedtprocent på 33 og ned til 23. Og jeg har tabt så meget at jeg har meget nemmere ved at bevæge mig. " +
+                "Knæ og fødder føles helt anderledes og jeg føler mig meget bedre tilpas. " +
+                "De sidste kilo er meget, meget svære - og for mig ikke så vigtige - derfor er jeg nu gået ind i en fase hvor jeg arbejder med at holde min vægt. Det er indtil videre lykkedes fornuftigt.  " +
+                " Jeg brugte cykling og vægttræning som træningsmetoder til at få forbrændingen op. " +
+                "Cykling 1-2 gange om ugen til og fra arbejde. Vægttræning meget svingende mellem to og fire gange pr uge. Nedenstående er mit forsøg på at samle op på forløbet så andre måske kan bruge det. " +
+                "Jeg synes vægttræning er en suveræn træningsform til vægttab. Det føles som om man nærmest er mindre sulten efter træning - i modsætning til cykling hvor man bliver sulten.  "));
+
+
+        add(new H2("Tips til mæthed, cravings med mere:"));
 
         add(new Span("Mæthed er forsinket. Hvis man lige har spist et måltid kan der gå 20 minutter før man mærker mæthed"));
         add(new Span("Cravings - går ofte væk efter ca. 20 minutter."));
@@ -48,6 +63,11 @@ public class Tips extends VerticalLayout {
                 "\n" +
                 "Står i 7 timer: 120-140 kcal/time × 7 timer = 840-980 kcal - altså procentvis en pæn merforbrænding, som i sig selv kan give en respektabel effekt" ));
 
+
+
+
+        add(new Span("At falde i. Det er en del af gamet. Gå tilbage  til plan og sig pyt. Lad være at kompensere, altså træne ekstra eller spise mindre. De mange, mange gange jeg selv er faldet i " +
+                "har det handlet om at være ude af balance med kosten. Og hvis man kompenserer kommer man nemt til at opretholde en ubalance. " ));
 
 
         add(new Span("Påstand: Der er ikke noget der feder mere end andet. Det eneste der feder er kalorier."));
