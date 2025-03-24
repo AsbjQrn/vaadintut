@@ -82,7 +82,7 @@ public class Tips extends VerticalLayout {
         add(new Span("At falde i. Det er en del af gamet. Gå tilbage til plan og sig pyt. Lad være at kompensere, altså træne ekstra eller spise mindre. De mange, mange gange jeg selv er faldet i " +
                 "har det handlet om at være ude af balance med kosten og mætheden. Og hvis man kompenserer kommer man nemt til at opretholde en ubalance, hvor man er for sulten. "));
 
-
+// sE OGSÅ       foedevareguiden.dk
 
 
     }

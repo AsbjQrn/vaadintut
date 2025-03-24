@@ -54,7 +54,6 @@ public class MainView extends VerticalLayout {
         UI.getCurrent().getElement().getThemeList().add(Lumo.DARK);
 
 
-
         List<FoodItem> foodListToChooseFrom = dataloader.getFood();
 
 //      Food choice
@@ -77,7 +76,7 @@ public class MainView extends VerticalLayout {
         Grid.Column<Food> kulhydrat = chosenFoodGrid.addColumn(Food::getGramCarbonhydrates).setHeader(KOLONNE_KULHYDRAT).setAutoWidth(true);
         Grid.Column<Food> fedt = chosenFoodGrid.addColumn(Food::getGramFat).setHeader(KOLONNE_FEDT).setAutoWidth(true);
         Grid.Column<Food> fibre = chosenFoodGrid.addColumn(Food::getGramDietaryfibre).setHeader(KOLONNE_FIBRE).setAutoWidth(true);
-        Grid.Column<Food> maethed = chosenFoodGrid.addColumn(Food::getMaethed).setHeader(createHeaderWithTooltip(KOLONNE_MAETHED, "Hvor mæt du bliver")).setAutoWidth(true);
+        Grid.Column<Food> maethed = chosenFoodGrid.addColumn(Food::getMaethed).setHeader(createHeaderWithTooltip(KOLONNE_MAETHED, "Hvor mæt du bliver")).setAutoWidth(true).setKey(KOLONNE_MAETHED);
 
 
         chosenFoodGrid.addComponentColumn(food -> {
@@ -126,10 +125,6 @@ public class MainView extends VerticalLayout {
         add(badgeContainer);
 
 
-
-
-
-
         Button Slanketips = new Button("Slanketips", event ->
                 getUI().ifPresent(ui -> ui.navigate("tips"))
         );
@@ -137,7 +132,6 @@ public class MainView extends VerticalLayout {
         linksContainer.add(Slanketips);
 
         add(linksContainer);
-
 
 
     }
@@ -155,8 +149,7 @@ public class MainView extends VerticalLayout {
         // Vaadin's built-in tooltip component
         Tooltip tooltip = Tooltip.forComponent(infoIcon)
                 .withText("Mæthedstallet er et beregnet mål, som udtrykker opnået mæthed/kalorie. Målet holder godt vand i de fleste tilfælde, men skal kombineres med ens egen mæthedsoplevelse.")
-                .withPosition(Tooltip.TooltipPosition.BOTTOM)
-                ;
+                .withPosition(Tooltip.TooltipPosition.BOTTOM);
 
 
         return new HorizontalLayout(headerLabel, infoIcon);
@@ -213,8 +206,10 @@ public class MainView extends VerticalLayout {
         MealTotals mealTotals = opskrift.calculateTotals();
 
         List<Grid.Column<Food>> alleKollonner = chosenFoodGrid.getColumns();
+
         for (Grid.Column<Food> column : alleKollonner) {
             String headerText = column.getHeaderText();
+
             if (headerText == null) {
                 continue;
             }
@@ -241,13 +236,12 @@ public class MainView extends VerticalLayout {
                 case KOLONNE_GRAM:
                     column.setFooter(String.format("%.2f", mealTotals.getGramIalt()));
                     break;
-                case KOLONNE_MAETHED:
-                    column.setFooter(String.format("%.2f", mealTotals.getMaethed()));
-                    break;
                 default:
                     column.setFooter("");
                     break;
-            }
+        }
+
+        chosenFoodGrid.getColumnByKey(KOLONNE_MAETHED).setFooter(String.format("%.2f", mealTotals.getMaethed()));
 
             bagdes.removeAll();
             bagdes.add(
@@ -257,10 +251,10 @@ public class MainView extends VerticalLayout {
             );
         }
 
+        chosenFoodGrid.getDataProvider().
 
-        chosenFoodGrid.getDataProvider().refreshAll();
+                refreshAll();
         foodChoiceComboBox.clear();
-
 
     }
 
