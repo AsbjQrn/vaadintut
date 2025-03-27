@@ -39,7 +39,7 @@ public class Tips extends VerticalLayout {
 
         add(new H2("Tips til mæthed, cravings med mere:"));
 
-        add(new Span("Mæthed er forsinket. Hvis man lige har spist et måltid kan der gå 20 minutter før man mærker mæthed"));
+        add(new Span("Mæthed er forsinket. Hvis man lige har spist dagens sidste måltid og stadig er sulten - så vent med chokoladen .... Vent 20 minutter se om mætheden kommer - det gør den for det meste"));
         add(new Span("Cravings - går ofte væk efter ca. 20 minutter."));
         add(new Span("Styring af mæthed og cravings under kalorie underskud, kan opnås ved at sprede kalorierne ud over dagen. " +
                 "Dvs med mellem-måltider og feks fem måltider istedet for to eller tre. (Feks tre hovedmåltider á 500 kcal og to mellemmåltider á 250 kcal - hvis man altså skal have 2000 kcal dagligt) - " +
@@ -79,8 +79,12 @@ public class Tips extends VerticalLayout {
         add(new Span("Husk at få nok vand - det ser ud til der sker mindre vægttab hvis man ikke drikker nok"));
 
 
-        add(new Span("At falde i. Det er en del af gamet. Gå tilbage til plan og sig pyt. Lad være at kompensere, altså træne ekstra eller spise mindre. De mange, mange gange jeg selv er faldet i " +
-                "har det handlet om at være ude af balance med kosten og mætheden. Og hvis man kompenserer kommer man nemt til at opretholde en ubalance, hvor man er for sulten. "));
+        add(new Span("At falde i. Det er en del af gamet og der skal være plads til lidt fest, rødvin og chokolade - ellers bliver det for kedeligt. Gå tilbage til plan og sig pyt. Lad være at kompensere, altså træne ekstra eller spise mindre. De mange, mange gange jeg selv er faldet i " +
+                "har det handlet om at være ude af balance med kosten og mætheden. Og hvis man kompenserer kommer man nemt til at opretholde en ubalance, hvor man er for sulten. " +
+                "Man kan også indbygge nogle mere sjove måltider med rødvin osv hvis man vil have det med i sin plan - det eneste der betyder noget er at man holder ud i længden. " +
+                "Og det gør man hvis det er sjovt men man skal selvfølgelig stadig, samlet set, være i kaloriunderskud hvis der skal ske noget ...  "));
+
+
 
 // sE OGSÅ       foedevareguiden.dk
 
