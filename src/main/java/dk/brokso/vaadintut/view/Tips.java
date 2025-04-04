@@ -25,9 +25,10 @@ public class Tips extends VerticalLayout {
         add(new Span("Nedenstående er et forsøg på at videreformidle de tanker og teknikker jeg har samlet op og brugt til selv at tabe mig. Jeg gik fra 111 kilo til 95-96 kilo på 7-8 måneder." +
                 "Jeg er ikke blevet super slim - så skulle jeg tabe mig noget mere. Men har dog fået fedtprocenten ud af det røde felt og ind i toppen af det grønne felt. " +
                 "Og jeg har tabt så meget at knæ og fødder føles helt anderledes og jeg føler mig meget bedre tilpas. " +
-                "De sidste kilo er meget, meget svære at tabe - og for mig ikke så vigtige - derfor er jeg nu gået ind i en fase hvor jeg arbejder med at holde min vægt. Det er indtil videre lykkedes fornuftigt.  " +
+                "De sidste kilo er svære at tabe - og for mig ikke så vigtige - derfor er jeg nu gået ind i en fase hvor jeg arbejder med at holde min vægt. Det er indtil videre lykkedes fornuftigt.  " +
                 "Jeg brugte cykling og vægttræning som træningsmetoder til at få forbrændingen op. " +
-                "Cykling 1-2 gange om ugen til og fra arbejde. Vægttræning meget svingende mellem to og fire gange pr uge. Nedenstående er mit forsøg på at samle op på forløbet så andre måske kan bruge det. " +
+                "Cykling 1-2 gange om ugen til og fra arbejde (for det meste een gang). Vægttræning meget svingende mellem to og fire gange pr uge (for det meste to gange). Nedenstående er mit forsøg på at samle op på " +
+                "forløbet så andre måske kan bruge det. " +
                 "Jeg synes vægttræning er en suveræn træningsform til vægttab. Det føles som om man nærmest er mindre sulten efter træning - i modsætning til cykling hvor man bliver sulten. " +
                 "Jeg har brugt en kostplan med tre hovedmåltider og to mellemmåltider og selvfølgelig et indbygget kalorieunderskud i denne plan. " +
                 "Min erfaring er at det er den gyldne, stille og rolige mellemvej, som i virkeligheden er motorvejen til vægttab"));
@@ -39,7 +40,7 @@ public class Tips extends VerticalLayout {
 
         add(new H2("Tips til mæthed, cravings med mere:"));
 
-        add(new Span("Mæthed er forsinket. Hvis man lige har spist dagens sidste måltid og stadig er sulten - så vent med chokoladen .... Vent 20 minutter se om mætheden kommer - det gør den for det meste"));
+        add(new Span("Mæthed er forsinket. Hvis man lige har spist dagens sidste måltid og stadig er sulten - så vent med chokoladen .... Vent 20-30 minutter og se om mætheden kommer - det gør den for det meste"));
         add(new Span("Cravings - går ofte væk efter ca. 20 minutter."));
         add(new Span("Styring af mæthed og cravings under kalorie underskud, kan opnås ved at sprede kalorierne ud over dagen. " +
                 "Dvs med mellem-måltider og feks fem måltider istedet for to eller tre. (Feks tre hovedmåltider á 500 kcal og to mellemmåltider á 250 kcal - hvis man altså skal have 2000 kcal dagligt) - " +
@@ -53,10 +54,10 @@ public class Tips extends VerticalLayout {
                 "I det hele taget SUPERVÅBNET til vægttab"));
 
 
-        add(new Span("Bemærk at appen beregner et mæthedstal. Tallet udtrykker \"opnået mæthed pr indtaget kalorie\". Tallet ligger mellem 0 og 5. Jo højere tal, jo mere mæthed. Tallet er som regel retvisende, " +
+        add(new Span("Bemærk at appen beregner et mæthedstal. Tallet udtrykker \"opnået mæthed pr indtaget kalorie\". Tallet ligger mellem 0.5 og 5. Jo højere tal, jo mere mæthed. Tallet er som regel retvisende, " +
                 "men det er klogt lige at prøve en ny ret af, inden man kaster sig ud i at preppe til en måneds aftensmad :-)  "));
 
-        add(new Span("Termisk effekt. Denne app er skrevet, så man kan designe retter, der udnytter den såkaldte \"termiske effekt\". " +
+        add(new Span("Termisk effekt. Denne app er bland andet skrevet, så man kan designe retter, der udnytter den såkaldte \"termiske effekt\". " +
                 "Termisk effekt går ud på at kroppen bruger forskellig mængde energi på at forbrænde forskellige fødevarer." +
                 "Når man spiser fedt bruges 0-3 procent af den indtagne energi til forbrænding. For kulhydrat er det mellem 5 og 10 procent. " +
                 "For protein er det mellem 20 og 30 procent, dvs man opnår en ekstra forbrændings/slankeeffekt ved indtagelse af den samme mængde kalorier, på forskellige fødevarer " +
@@ -71,7 +72,7 @@ public class Tips extends VerticalLayout {
 
         add(new Span("NEAT - \"Non-exercise activity thermogenesis\". Et fint udtryk for ikke at ligge i sofaen - men heller ikke være igang med at træne. " +
                 "Kort sagt alle mulige småting kan have en kæmpe effekt for ens forbrænding - havearbejde, male bryggerset, cykle til brugsen istedet for bil - osv. " +
-                "Eksempel: at stå op at arbejde for en udvikler der ellers ville sidde hele dagen: " +
+                "Eksempel: at stå op at arbejde for en person der ellers ville sidde hele dagen: " +
                 "Sidder i 7 timer: 100 kcal/time × 7 timer = 700 kcal" +
                 "Står i 7 timer: 120-140 kcal/time × 7 timer = 840-980 kcal - altså procentvis en pæn merforbrænding. " +
                 "Så hvis man ændrer en sidde-vane og et par andre småting har man hurtigt et par hundrede kalorier om dagen - \"gratis\" ;-)  "));
@@ -79,10 +80,11 @@ public class Tips extends VerticalLayout {
         add(new Span("Husk at få nok vand - det ser ud til der sker mindre vægttab hvis man ikke drikker nok"));
 
 
-        add(new Span("At falde i. Det er en del af gamet og der skal være plads til lidt fest, rødvin og chokolade - ellers bliver det for kedeligt. Gå tilbage til plan og sig pyt. Lad være at kompensere, altså træne ekstra eller spise mindre. De mange, mange gange jeg selv er faldet i " +
+        add(new Span("At falde i. Det er en del af gamet og der skal være plads til lidt fest, rødvin og chokolade - ellers bliver det for kedeligt. Gå tilbage til plan og sig pyt. Lad være at kompensere, altså træne ekstra eller spise mindre. " +
+                "De mange, mange gange jeg selv er faldet i " +
                 "har det handlet om at være ude af balance med kosten og mætheden. Og hvis man kompenserer kommer man nemt til at opretholde en ubalance, hvor man er for sulten. " +
-                "Man kan også indbygge nogle mere sjove måltider med rødvin osv hvis man vil have det med i sin plan - det eneste der betyder noget er at man holder ud i længden. " +
-                "Og det gør man hvis det er sjovt men man skal selvfølgelig stadig, samlet set, være i kaloriunderskud hvis der skal ske noget ...  "));
+                "Man kan også indbygge nogle mere sjove måltider med rødvin osv hvis man vil have det med i sin plan - det eneste der betyder noget er at man holder ud i længden og er i underskud samlet set. " +
+                " - Og man holder ud hvis det også er lidt sjovt ...  "));
 
 
 
