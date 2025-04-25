@@ -108,11 +108,12 @@ public class MainView extends VerticalLayout {
         gramKolonne.setEditorComponent(gramField);
 
         chosenFoodGrid.addItemClickListener(e -> {
-            editor.editItem(e.getItem());
+
             Component editorComponent = e.getColumn().getEditorComponent();
             if (editorComponent instanceof Focusable<?>) {
                 ((Focusable) editorComponent).focus();
             }
+            editor.editItem(e.getItem());
         });
 
         proteinBadge = initializeBadge();
@@ -148,7 +149,7 @@ public class MainView extends VerticalLayout {
 
         // Vaadin's built-in tooltip component
         Tooltip tooltip = Tooltip.forComponent(infoIcon)
-                .withText("Mæthedstallet er et beregnet mål, som udtrykker opnået mæthed/kalorie. Målet holder godt vand i de fleste tilfælde, men skal kombineres med ens egen mæthedsoplevelse.")
+                .withText("Mæthedstallet er et beregnet mål, som udtrykker opnået mæthed per spist kalorie. Målet holder godt vand i de fleste tilfælde, men skal kombineres med ens egen mæthedsoplevelse.")
                 .withPosition(Tooltip.TooltipPosition.BOTTOM);
 
 
