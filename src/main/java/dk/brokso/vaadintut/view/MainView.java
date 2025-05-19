@@ -1,12 +1,10 @@
 package dk.brokso.vaadintut.view;
 
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.Focusable;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.grid.editor.Editor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -15,12 +13,10 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.shared.Tooltip;
 import com.vaadin.flow.component.textfield.NumberField;
-import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.Lumo;
 import dk.brokso.vaadintut.data.*;
-//import dk.brokso.vaadintut.utils.Calculator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +66,30 @@ public class MainView extends VerticalLayout {
 //      Chosen foods
         this.chosenFoodGrid = new Grid<>(Food.class, false);
         Grid.Column<Food> navnKolonne = chosenFoodGrid.addColumn(Food::getName).setHeader(KOLONNE_NAVN).setAutoWidth(true);
-        Grid.Column<Food> gramKolonne = chosenFoodGrid.addColumn(Food::getGram).setHeader(KOLONNE_GRAM).setAutoWidth(true);
+
+        // Replace the gram column with an editable component column
+        Grid.Column<Food> gramKolonne = chosenFoodGrid.addComponentColumn(food -> {
+            NumberField gramField = new NumberField();
+            gramField.setValue(food.getGram());
+            gramField.setWidthFull();
+            gramField.setMin(0);
+            gramField.setStepButtonsVisible(false);
+            gramField.setAutoselect(true);
+
+            // Select all text when field is clicked
+//            gramField.getElement().addEventListener("click", e -> gramField.setAutoselect(true));
+
+            // Update the food item when the value changes
+            gramField.addValueChangeListener(e -> {
+                if (e.getValue() != null) {
+                    food.setGram(e.getValue());
+                    refresh();
+                }
+            });
+
+            return gramField;
+        }).setHeader(KOLONNE_GRAM).setAutoWidth(true);
+
         Grid.Column<Food> kalorieKolonne = chosenFoodGrid.addColumn(Food::getTotalCalories).setHeader(KOLONNE_KALORIER).setAutoWidth(true);
         Grid.Column<Food> protein = chosenFoodGrid.addColumn(Food::getGramProtein).setHeader(KOLONNE_PROTEIN).setAutoWidth(true);
         Grid.Column<Food> kulhydrat = chosenFoodGrid.addColumn(Food::getGramCarbonhydrates).setHeader(KOLONNE_KULHYDRAT).setAutoWidth(true);
@@ -93,29 +112,6 @@ public class MainView extends VerticalLayout {
 
         chosenFoodGrid.setItems(chosenfoodList);
 
-        Binder<Food> binder = new Binder<>(Food.class);
-        Editor<Food> editor = chosenFoodGrid.getEditor();
-        editor.setBinder(binder);
-
-        NumberField gramField = new NumberField();
-        gramField.addBlurListener(blur -> refresh());
-        gramField.setWidthFull();
-
-
-        binder.forField(gramField)
-                .asRequired("Gram name must not be empty or 0")
-                .bind(Food::getGram, Food::setGram);
-        gramKolonne.setEditorComponent(gramField);
-
-        chosenFoodGrid.addItemClickListener(e -> {
-
-            Component editorComponent = e.getColumn().getEditorComponent();
-            if (editorComponent instanceof Focusable<?>) {
-                ((Focusable) editorComponent).focus();
-            }
-            editor.editItem(e.getItem());
-        });
-
         proteinBadge = initializeBadge();
         kulhydratBadge = initializeBadge();
         fedtBadge = initializeBadge();
@@ -133,8 +129,6 @@ public class MainView extends VerticalLayout {
         linksContainer.add(Slanketips);
 
         add(linksContainer);
-
-
     }
 
     private Component createHeaderWithTooltip(String headerText, String tooltipText) {
@@ -189,7 +183,6 @@ public class MainView extends VerticalLayout {
         }
         chosenfoodList.remove(chosenFoodItem);
         refresh();
-
     }
 
     private void receiveChosenValue(FoodItem chosenFoodItem) {
@@ -198,11 +191,9 @@ public class MainView extends VerticalLayout {
         }
         chosenfoodList.add(chosenFoodItem);
         refresh();
-
     }
 
     private void refresh() {
-
         foodChoiceComboBox.setClearButtonVisible(true);
         MealTotals mealTotals = opskrift.calculateTotals();
 
@@ -240,23 +231,20 @@ public class MainView extends VerticalLayout {
                 default:
                     column.setFooter("");
                     break;
+            }
         }
 
         chosenFoodGrid.getColumnByKey(KOLONNE_MAETHED).setFooter(String.format("%.2f", mealTotals.getMaethed()));
 
-            bagdes.removeAll();
-            bagdes.add(
-                    createColoredValue("Protein", mealTotals.getOpskriftPercentageProtein(), "#90bdf9"),
-                    createColoredValue("Kulhydrat", mealTotals.getOpskriftPercentageCarbonhydrates(), "#8aff66"),
-                    createColoredValue("Fedt", mealTotals.getOpskriftPercentageFat(), "#ffbd66")
-            );
-        }
+        bagdes.removeAll();
+        bagdes.add(
+                createColoredValue("Protein", mealTotals.getOpskriftPercentageProtein(), "#90bdf9"),
+                createColoredValue("Kulhydrat", mealTotals.getOpskriftPercentageCarbonhydrates(), "#8aff66"),
+                createColoredValue("Fedt", mealTotals.getOpskriftPercentageFat(), "#ffbd66")
+        );
 
-        chosenFoodGrid.getDataProvider().
-
-                refreshAll();
+        // Force a refresh of the grid data
+        ((ListDataProvider<Food>) chosenFoodGrid.getDataProvider()).refreshAll();
         foodChoiceComboBox.clear();
-
     }
-
 }
