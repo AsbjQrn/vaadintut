@@ -4,22 +4,34 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.shared.Tooltip;
 import com.vaadin.flow.component.textfield.NumberField;
+import com.vaadin.flow.component.textfield.TextArea;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.Lumo;
 import dk.brokso.vaadintut.data.*;
 
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Route("")
@@ -32,6 +44,11 @@ public class MainView extends VerticalLayout {
     private Span kulhydratBadge;
     private Span fedtBadge;
 
+    // New components for recipe management
+    private TextField recipeNameField;
+    private TextArea recipeDescriptionField;
+    private ComboBox<String> savedRecipesComboBox;
+
     private final List<Food> chosenfoodList = new ArrayList<>();
     private final Opskrift opskrift = new Opskrift(chosenfoodList);
     private final static String KOLONNE_NAVN = "Navn";
@@ -43,14 +60,58 @@ public class MainView extends VerticalLayout {
     private final static String KOLONNE_FIBRE = "Fibre";
     private final static String KOLONNE_MAETHED = "Mæthed";
 
+    // Directory to store recipes
+    private final static String RECIPES_DIR = "recipes";
+
 
     MainView(Dataloader dataloader) {
-
+        // Create recipes directory if it doesn't exist
+        createRecipesDirectory();
 
         UI.getCurrent().getElement().getThemeList().add(Lumo.DARK);
 
-
         List<FoodItem> foodListToChooseFrom = dataloader.getFood();
+
+        // Recipe management section
+        VerticalLayout recipeManagementLayout = new VerticalLayout();
+        recipeManagementLayout.setWidthFull();
+
+        // Recipe name field
+        recipeNameField = new TextField("Opskrift navn");
+        recipeNameField.setWidthFull();
+
+        // Recipe description field
+        recipeDescriptionField = new TextArea("Beskrivelse");
+        recipeDescriptionField.setWidthFull();
+        recipeDescriptionField.setHeight("100px");
+
+        // Saved recipes dropdown
+        savedRecipesComboBox = new ComboBox<>("Gemte opskrifter");
+        savedRecipesComboBox.setWidthFull();
+        updateSavedRecipesList();
+        savedRecipesComboBox.addValueChangeListener(event -> {
+            if (event.getValue() != null) {
+                loadRecipe(event.getValue());
+            }
+        });
+
+        // Save and load buttons
+        Button saveButton = new Button("Gem opskrift", VaadinIcon.DOWNLOAD.create());
+        saveButton.addClickListener(e -> saveRecipe());
+
+        Button deleteRecipeButton = new Button("Slet opskrift", VaadinIcon.TRASH.create());
+        deleteRecipeButton.getStyle().set("color", "#ffbd66");
+        deleteRecipeButton.addClickListener(e -> deleteRecipe());
+
+        // Add recipe management components
+        HorizontalLayout recipeFieldsLayout = new HorizontalLayout(recipeNameField, savedRecipesComboBox);
+        recipeFieldsLayout.setWidthFull();
+
+        HorizontalLayout buttonLayout = new HorizontalLayout(saveButton, deleteRecipeButton);
+        buttonLayout.setWidthFull();
+
+        recipeManagementLayout.add(recipeFieldsLayout, recipeDescriptionField, buttonLayout);
+        add(recipeManagementLayout);
 
 //      Food choice
         VerticalLayout topOfPage = new VerticalLayout();
@@ -75,9 +136,6 @@ public class MainView extends VerticalLayout {
             gramField.setMin(0);
             gramField.setStepButtonsVisible(false);
             gramField.setAutoselect(true);
-
-            // Select all text when field is clicked
-//            gramField.getElement().addEventListener("click", e -> gramField.setAutoselect(true));
 
             // Update the food item when the value changes
             gramField.addValueChangeListener(e -> {
@@ -246,5 +304,183 @@ public class MainView extends VerticalLayout {
         // Force a refresh of the grid data
         ((ListDataProvider<Food>) chosenFoodGrid.getDataProvider()).refreshAll();
         foodChoiceComboBox.clear();
+    }
+
+    // Create the recipes directory if it doesn't exist
+    private void createRecipesDirectory() {
+        try {
+            Path path = Paths.get(RECIPES_DIR);
+            if (!Files.exists(path)) {
+                Files.createDirectories(path);
+            }
+        } catch (IOException e) {
+            Notification.show("Fejl ved oprettelse af opskrifts-mappe: " + e.getMessage(),
+                    3000, Notification.Position.MIDDLE);
+        }
+    }
+
+    // Save the current recipe
+    private void saveRecipe() {
+        String recipeName = recipeNameField.getValue();
+
+        if (recipeName == null || recipeName.trim().isEmpty()) {
+            Notification notification = Notification.show("Angiv venligst et navn til opskriften");
+            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            return;
+        }
+
+        if (chosenfoodList.isEmpty()) {
+            Notification notification = Notification.show("Tilføj venligst nogle ingredienser til opskriften");
+            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            return;
+        }
+
+        // Prepare the recipe for saving
+        SavedRecipe savedRecipe = new SavedRecipe();
+        savedRecipe.setName(recipeName);
+        savedRecipe.setDescription(recipeDescriptionField.getValue());
+        savedRecipe.setIngredients(new ArrayList<>(chosenfoodList));
+
+        // Save the recipe to a file
+        try {
+            FileOutputStream fileOut = new FileOutputStream(RECIPES_DIR + "/" + recipeName + ".ser");
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(savedRecipe);
+            out.close();
+            fileOut.close();
+
+            Notification notification = Notification.show("Opskrift gemt: " + recipeName);
+            notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+
+            // Update the saved recipes list
+            updateSavedRecipesList();
+        } catch (IOException e) {
+            Notification notification = Notification.show("Fejl ved gemning af opskrift: " + e.getMessage());
+            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+        }
+    }
+
+    // Load a recipe by name
+    private void loadRecipe(String recipeName) {
+        try {
+            FileInputStream fileIn = new FileInputStream(RECIPES_DIR + "/" + recipeName + ".ser");
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            SavedRecipe savedRecipe = (SavedRecipe) in.readObject();
+            in.close();
+            fileIn.close();
+
+            // Update UI with loaded recipe
+            recipeNameField.setValue(savedRecipe.getName());
+            recipeDescriptionField.setValue(savedRecipe.getDescription() != null ? savedRecipe.getDescription() : "");
+
+            // Clear current ingredients and add the loaded ones
+            chosenfoodList.clear();
+            chosenfoodList.addAll(savedRecipe.getIngredients());
+
+            // Refresh the UI
+            refresh();
+
+            Notification notification = Notification.show("Opskrift indlæst: " + recipeName);
+            notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+        } catch (IOException | ClassNotFoundException e) {
+            Notification notification = Notification.show("Fejl ved indlæsning af opskrift: " + e.getMessage());
+            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+        }
+    }
+
+    // Delete the currently selected recipe
+    private void deleteRecipe() {
+        String recipeName = savedRecipesComboBox.getValue();
+
+        if (recipeName == null || recipeName.trim().isEmpty()) {
+            Notification notification = Notification.show("Vælg venligst en opskrift at slette");
+            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            return;
+        }
+
+        // Confirm deletion
+        Dialog confirmDialog = new Dialog();
+        confirmDialog.setHeaderTitle("Bekræft sletning");
+
+        VerticalLayout dialogLayout = new VerticalLayout();
+        dialogLayout.add(new Span("Er du sikker på, at du vil slette opskriften \"" + recipeName + "\"?"));
+        dialogLayout.setAlignItems(FlexComponent.Alignment.CENTER);
+
+        HorizontalLayout buttonLayout = new HorizontalLayout();
+        Button confirmButton = new Button("Slet", e -> {
+            try {
+                Files.deleteIfExists(Paths.get(RECIPES_DIR + "/" + recipeName + ".ser"));
+                updateSavedRecipesList();
+
+                if (recipeNameField.getValue().equals(recipeName)) {
+                    recipeNameField.setValue("");
+                    recipeDescriptionField.setValue("");
+                }
+
+                Notification notification = Notification.show("Opskrift slettet: " + recipeName);
+                notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                savedRecipesComboBox.clear();
+            } catch (IOException ex) {
+                Notification notification = Notification.show("Fejl ved sletning af opskrift: " + ex.getMessage());
+                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            }
+            confirmDialog.close();
+        });
+        confirmButton.getStyle().set("color", "#ffbd66");
+
+        Button cancelButton = new Button("Annuller", e -> confirmDialog.close());
+        buttonLayout.add(confirmButton, cancelButton);
+
+        dialogLayout.add(buttonLayout);
+        confirmDialog.add(dialogLayout);
+        confirmDialog.open();
+    }
+
+    // Update the saved recipes list in the combobox
+    private void updateSavedRecipesList() {
+        try {
+            List<String> recipeNames = Files.list(Paths.get(RECIPES_DIR))
+                    .filter(path -> path.toString().endsWith(".ser"))
+                    .map(path -> path.getFileName().toString().replace(".ser", ""))
+                    .collect(Collectors.toList());
+
+            savedRecipesComboBox.setItems(recipeNames);
+        } catch (IOException e) {
+            Notification notification = Notification.show("Fejl ved indlæsning af gemte opskrifter: " + e.getMessage());
+            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+        }
+    }
+}
+
+// Serializable class to save recipe data
+class SavedRecipe implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    private String name;
+    private String description;
+    private List<Food> ingredients;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List<Food> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(List<Food> ingredients) {
+        this.ingredients = ingredients;
     }
 }

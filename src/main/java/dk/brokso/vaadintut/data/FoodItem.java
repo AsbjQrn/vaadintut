@@ -2,6 +2,7 @@ package dk.brokso.vaadintut.data;
 
 
 
+import java.io.Serializable;
 import java.util.List;
 
 import dk.brokso.vaadintut.utils.Calculator;
@@ -13,7 +14,7 @@ import lombok.ToString;
 @Data
 @ToString
 @EqualsAndHashCode
-public class FoodItem implements Food {
+public class FoodItem implements Food, Serializable {
 
     private static int foodcounter;
     private int id;
