@@ -7,7 +7,6 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -304,6 +303,7 @@ public class MainView extends VerticalLayout {
         // Force a refresh of the grid data
         ((ListDataProvider<Food>) chosenFoodGrid.getDataProvider()).refreshAll();
         foodChoiceComboBox.clear();
+        chosenFoodGrid.setItems(new ArrayList<>(chosenfoodList));
     }
 
     // Create the recipes directory if it doesn't exist
